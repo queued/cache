@@ -45,11 +45,11 @@ class cacheTest extends \PHPUnit_Framework_Testcase
 
     public function testSet()
     {
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->cache->set('key', 'value'));
+        $this->assertInstanceOf('\Orno\Cache\Cache', $this->cache->set('key', 'value'));
     }
 
     public function testDelete()
     {
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->cache->delete('key'));
+        $this->assertInstanceOf('\Orno\Cache\Cache', $this->cache->delete('key'));
     }
 }
