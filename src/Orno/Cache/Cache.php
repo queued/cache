@@ -3,7 +3,7 @@
  * The Orno Component Library
  *
  * @author  Phil Bennett @philipobenito
- * @license http://www.wtfpl.net/txt/copying/ WTFPL
+ * @license MIT (see LICENSE file)
  */
 namespace Orno\Cache;
 
@@ -15,7 +15,6 @@ use Orno\Cache\Adapter\CacheAdapterInterface;
  * Loads various different caching adapters and provides access to them
  *
  * @author Michael Bardsley <me@mic-b.co.uk>
- * @package Orno Cache
  */
 class Cache
 {

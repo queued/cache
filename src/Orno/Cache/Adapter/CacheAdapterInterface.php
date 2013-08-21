@@ -3,7 +3,7 @@
  * The Orno Component Library
  *
  * @author  Phil Bennett @philipobenito
- * @license http://www.wtfpl.net/txt/copying/ WTFPL
+ * @license MIT (see LICENSE file)
  */
 namespace Orno\Cache\Adapter;
 
@@ -13,7 +13,6 @@ namespace Orno\Cache\Adapter;
  * Provides an interface for building additional caching adapters
  *
  * @author Michael Bardsley <me@mic-b.co.uk>
- * @package Orno Cache
  */
 interface CacheAdapterInterface
 {
@@ -29,8 +28,9 @@ interface CacheAdapterInterface
      *
      * @param string $key
      * @param mixed $data
+     * @param null|int $expiry
      */
-    public function set($key, $data);
+    public function set($key, $data, $expiry = null);
 
     /**
      * Deletes the value in the adapter
@@ -45,4 +45,11 @@ interface CacheAdapterInterface
      * @param array $config
      */
     public function setConfig(array $config);
+
+    /**
+     * Sets the flag for whether to treat the expiry as minutes or seconds
+     *
+     * @param bool $value
+     */
+    public function setExpiryInMinutes($value);
 }
