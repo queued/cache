@@ -75,7 +75,7 @@ class Memcached implements CacheAdapterInterface
      *
      * @param string $key
      * @param mixed $data
-     * @param null|int $expiry number of minutes
+     * @param null|int $expiry number of seconds
      * @return \Orno\Cache\Adapter\Memcached
      */
     public function set($key, $data, $expiry = null)
