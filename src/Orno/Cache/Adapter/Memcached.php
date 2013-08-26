@@ -25,14 +25,14 @@ class Memcached implements CacheAdapterInterface
     protected $memcached;
 
     /**
-     * @var int the number of minutes until the cache entry expires
+     * @var int the number of seconds until the cache entry expires
      */
-    protected $expiry = 1;
+    protected $expiry = 60;
 
     /**
-     * @var bool false means the expiry will be tret as seconds else use minutes
+     * @var bool false means the expiry will be treated as seconds else use minutes
      */
-    protected $expiryInMinutes = true;
+    protected $expiryInMinutes = false;
 
     /**
      * Constructor
@@ -80,11 +80,11 @@ class Memcached implements CacheAdapterInterface
      */
     public function set($key, $data, $expiry = null)
     {
-        if (! is_null($expiry)) {
-            $this->setExpiry($expiry);
+        if (is_null($expiry)) {
+            $expiry = $this->getExpiry();
         }
 
-        $this->memcached->set($key, $data, $this->getExpiry());
+        $this->memcached->set($key, $data, $expiry);
         return $this;
     }
 
@@ -109,7 +109,8 @@ class Memcached implements CacheAdapterInterface
      *                               ["127.0.0.1", 11211, 1],
      *                               ["192.168.0.1", 11211, 3],
      *      ],
-     *      "expiry" => 120
+     *      "expiry" => 120,
+     *      "expiry-by-minutes" => true
      * ]
      *
      *
@@ -200,18 +201,28 @@ class Memcached implements CacheAdapterInterface
      */
     protected function getExpiry()
     {
-        return ($this->expiryInMinutes === false)? $this->expiry: $this->expiry * 60;
+        return ($this->isExpiryInMinutes())? $this->expiry * 60 : $this->expiry;
     }
 
     /**
      * Sets the exiry time
      *
-     * @param int $expiry
+     * @param number $expiry
      * @return \Orno\Cache\Adapter\Memcached
      */
     protected function setExpiry($expiry)
     {
-        $this->expiry = (int) $expiry;
+        $this->expiry = $expiry;
         return $this;
+    }
+
+    /**
+     * Returns true if the flag is set to work the time out in minutes else false for seconds
+     *
+     * @return boolean
+     */
+    protected function isExpiryInMinutes()
+    {
+        return (bool) $this->expiryInMinutes;
     }
 }
