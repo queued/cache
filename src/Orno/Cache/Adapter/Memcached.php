@@ -9,6 +9,7 @@ namespace Orno\Cache\Adapter;
 
 use Orno\Cache\Adapter\CacheAdapterInterface;
 use Orno\Cache\Exception;
+use Orno\Cache\Utilities\Converter;
 
 /**
  * Memcached
@@ -30,11 +31,6 @@ class Memcached implements CacheAdapterInterface
     protected $expiry = 60;
 
     /**
-     * @var bool false means the expiry will be treated as seconds else use minutes
-     */
-    protected $expiryInMinutes = false;
-
-    /**
      * Constructor
      *
      * @param array $config
@@ -50,6 +46,8 @@ class Memcached implements CacheAdapterInterface
         $this->setMemcached($memcached);
 
         $this->setConfig($config);
+
+        $this->converter = new Converter;
     }
 
     /**
@@ -109,10 +107,9 @@ class Memcached implements CacheAdapterInterface
      *                               ["127.0.0.1", 11211, 1],
      *                               ["192.168.0.1", 11211, 3],
      *      ],
-     *      "expiry" => 120,
-     *      "expiry-by-minutes" => true
+     *      "expiry" => 120, //expiry in seconds
+     *      "expiry" => '5w 9d 12h 24m 55s', //expiry in time string
      * ]
-     *
      *
      * @param array $config
      * @return \Orno\Cache\Adapter\Memcached
@@ -125,10 +122,6 @@ class Memcached implements CacheAdapterInterface
 
         if (array_key_exists('expiry', $config)) {
             $this->setExpiry($config['expiry']);
-        }
-
-        if (array_key_exists('expiry-by-minutes', $config)) {
-            $this->setExpiryInMinutes($config['expiry-by-minutes']);
         }
 
         return $this;
@@ -201,28 +194,26 @@ class Memcached implements CacheAdapterInterface
      */
     protected function getExpiry()
     {
-        return ($this->isExpiryInMinutes())? $this->expiry * 60 : $this->expiry;
+        return $this->expiry;
     }
 
     /**
-     * Sets the exiry time
+     * Sets the exiry time, can be set as a string or integer
      *
-     * @param number $expiry
+     * e.g.
+     * $expiry = 100 for 100 seconds
+     * or
+     * $expiry = '10m 30s' for 660 seconds
+     *
+     * @param int|string $expiry
      * @return \Orno\Cache\Adapter\Memcached
      */
     protected function setExpiry($expiry)
     {
+        if (is_string($expiry)) {
+            $expiry = $this->converter->timeStringToTimestamp($expiry);
+        }
         $this->expiry = $expiry;
         return $this;
-    }
-
-    /**
-     * Returns true if the flag is set to work the time out in minutes else false for seconds
-     *
-     * @return boolean
-     */
-    protected function isExpiryInMinutes()
-    {
-        return (bool) $this->expiryInMinutes;
     }
 }
