@@ -48,11 +48,12 @@ class Cache
      *
      * @param string $key
      * @param mixed $data
+     * @param string|int $expiry
      * @return \Orno\Cache\Cache
      */
-    public function set($key, $data)
+    public function set($key, $data, $expiry)
     {
-        $this->getAdapter()->set($key, $data);
+        $this->getAdapter()->set($key, $data, $expiry);
 
         return $this;
     }

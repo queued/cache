@@ -31,6 +31,11 @@ class Memcached implements CacheAdapterInterface
     protected $expiry = 60;
 
     /**
+     * @var \Orno\Cache\Utilities\Converter
+     */
+    protected $converter;
+
+    /**
      * Constructor
      *
      * @param array $config
@@ -82,6 +87,10 @@ class Memcached implements CacheAdapterInterface
             $expiry = $this->getExpiry();
         }
 
+        if (is_string($expiry)) {
+            $expiry = $this->converter->timeStringToSeconds($expiry);
+        }
+
         $this->memcached->set($key, $data, $expiry);
         return $this;
     }
@@ -123,18 +132,6 @@ class Memcached implements CacheAdapterInterface
         if (array_key_exists('expiry', $config)) {
             $this->setExpiry($config['expiry']);
         }
-
-        return $this;
-    }
-
-    /**
-     * Sets the flag for whether to treat the expiry as minutes or seconds
-     *
-     * @param bool $value
-     */
-    public function setExpiryInMinutes($value)
-    {
-        $this->expiryInMinutes = (bool) $value;
 
         return $this;
     }
@@ -211,7 +208,7 @@ class Memcached implements CacheAdapterInterface
     protected function setExpiry($expiry)
     {
         if (is_string($expiry)) {
-            $expiry = $this->converter->timeStringToTimestamp($expiry);
+            $expiry = $this->converter->timeStringToSeconds($expiry);
         }
         $this->expiry = $expiry;
         return $this;

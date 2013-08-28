@@ -45,11 +45,4 @@ interface CacheAdapterInterface
      * @param array $config
      */
     public function setConfig(array $config);
-
-    /**
-     * Sets the flag for whether to treat the expiry as minutes or seconds
-     *
-     * @param bool $value
-     */
-    public function setExpiryInMinutes($value);
 }
