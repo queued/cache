@@ -7,18 +7,14 @@
  */
 namespace Orno\Cache\Adapter;
 
-use Orno\Cache\Adapter\CacheAdapterInterface;
 use Orno\Cache\Exception;
-use Orno\Cache\Utilities\Converter;
 
 /**
  * Memcached
  *
- * Provides an adapter to store cache data on a memcached server
- *
  * @author Michael Bardsley <me@mic-b.co.uk>
  */
-class Memcached implements CacheAdapterInterface
+class Memcached extends AbstractAdapter
 {
     /**
      * @var \Memcached
@@ -26,47 +22,30 @@ class Memcached implements CacheAdapterInterface
     protected $memcached;
 
     /**
-     * @var int the number of seconds until the cache entry expires
-     */
-    protected $expiry = 60;
-
-    /**
-     * @var \Orno\Cache\Utilities\Converter
-     */
-    protected $converter;
-
-    /**
      * Constructor
      *
-     * @param array $config
-     * @param \Memcached $memcached
+     * @param  \Memcached $memcached
+     * @param  array      $config
      * @throws \Orno\Cache\Exception\AdapaterNotAvailableException
      */
-    public function __construct(array $config, \Memcached $memcached)
+    public function __construct(\Memcached $memcached, array $config)
     {
-        if (! extension_loaded('memcached')) {
-            throw new Exception\AdapaterNotAvailableException("Memcached ext not loaded");
-        }
-
         $this->setMemcached($memcached);
-
         $this->setConfig($config);
-
-        $this->converter = new Converter;
     }
 
     /**
      * Closes the memcached connection
      */
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->memcached->quit();
     }
 
     /**
-     * Get the memcached entry
+     * {@inheritdoc}
      *
-     * @param string $key
-     * @return mixed
+     * @return void
      */
     public function get($key)
     {
@@ -74,11 +53,8 @@ class Memcached implements CacheAdapterInterface
     }
 
     /**
-     * Set the memcached entry
+     * {@inheritdoc}
      *
-     * @param string $key
-     * @param mixed $data
-     * @param null|int $expiry number of seconds
      * @return \Orno\Cache\Adapter\Memcached
      */
     public function set($key, $data, $expiry = null)
@@ -88,39 +64,77 @@ class Memcached implements CacheAdapterInterface
         }
 
         if (is_string($expiry)) {
-            $expiry = $this->converter->timeStringToSeconds($expiry);
+            $expiry = $this->convertExpiryString($expiry);
         }
 
         $this->memcached->set($key, $data, $expiry);
+
         return $this;
     }
 
     /**
-     * Deletes the memcached entry
+     * {@inheritdoc}
      *
-     * @param string $key
      * @return \Orno\Cache\Adapter\Memcached
      */
     public function delete($key)
     {
         $this->memcached->delete($key);
+
         return $this;
     }
 
     /**
-     * Sets the config
+     * {@inheritdoc}
      *
-     * config array example
-     * [
-     *      "servers" => [
-     *                               ["127.0.0.1", 11211, 1],
-     *                               ["192.168.0.1", 11211, 3],
-     *      ],
-     *      "expiry" => 120, //expiry in seconds
-     *      "expiry" => '5w 9d 12h 24m 55s', //expiry in time string
-     * ]
+     * @return \Orno\Cache\Adapter\Memcached
+     */
+    public function persist($key, $value)
+    {
+        $this->set($key, $value, 0);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      *
-     * @param array $config
+     * @return \Orno\Cache\Adapter\Memcached
+     */
+    public function increment($key, $offset = 1)
+    {
+        $this->memcached->increment($key, $offset);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return \Orno\Cache\Adapter\Memcached
+     */
+    public function decrement($key, $offset = 1)
+    {
+        $this->memcached->decrement($key, $offset);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return \Orno\Cache\Adapter\Memcached
+     */
+    public function flush()
+    {
+        $this->memcached->flush();
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return \Orno\Cache\Adapter\Memcached
      */
     public function setConfig(array $config)
@@ -130,7 +144,7 @@ class Memcached implements CacheAdapterInterface
         }
 
         if (array_key_exists('expiry', $config)) {
-            $this->setExpiry($config['expiry']);
+            $this->setDefaultExpiry($config['expiry']);
         }
 
         return $this;
@@ -139,26 +153,28 @@ class Memcached implements CacheAdapterInterface
     /**
      * Adds a server to the memcached configuration
      *
-     * @param string $host
-     * @param int $port
-     * @param int $weight
+     * @param  string $host
+     * @param  int    $port
+     * @param  int    $weight
      * @return \Orno\Cache\Adapter\Memcached
      */
     protected function addServer($host, $port, $weight)
     {
         $this->memcached->addServer($host, $port, $weight);
+
         return $this;
     }
 
     /**
      * Adds an array of servers to the memcached configuration
      *
-     * @param array $servers
+     * @param  array $servers
      * @return \Orno\Cache\Adapter\Memcached
      */
     protected function addServers(array $servers)
     {
         $this->memcached->addServers($servers);
+
         return $this;
     }
 
@@ -175,42 +191,11 @@ class Memcached implements CacheAdapterInterface
     /**
      * Sets the memcached object
      *
-     * @param \Memcached $memcached
-     * @return \Orno\Cache\Adapter\Memcached
+     * @param  \Memcached $memcached
+     * @return void
      */
     protected function setMemcached(\Memcached $memcached)
     {
         $this->memcached = $memcached;
-        return $this;
-    }
-
-    /**
-     * Gets the expiry time
-     *
-     * @return int
-     */
-    protected function getExpiry()
-    {
-        return $this->expiry;
-    }
-
-    /**
-     * Sets the exiry time, can be set as a string or integer
-     *
-     * e.g.
-     * $expiry = 100 for 100 seconds
-     * or
-     * $expiry = '10m 30s' for 660 seconds
-     *
-     * @param int|string $expiry
-     * @return \Orno\Cache\Adapter\Memcached
-     */
-    protected function setExpiry($expiry)
-    {
-        if (is_string($expiry)) {
-            $expiry = $this->converter->timeStringToSeconds($expiry);
-        }
-        $this->expiry = $expiry;
-        return $this;
     }
 }

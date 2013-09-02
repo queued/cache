@@ -7,37 +7,32 @@
  */
 namespace Orno\Cache;
 
-use Orno\Cache\Adapter\CacheAdapterInterface;
+use Orno\Cache\Adapter\AdapterInterface;
 
 /**
  * Cache
  *
- * Loads various different caching adapters and provides access to them
- *
  * @author Michael Bardsley <me@mic-b.co.uk>
  */
-class Cache
+class Cache implements Adapter\AdapterInterface
 {
     /**
-     * @var Orno\Cache\Adapter\CacheAdapterInterface
+     * @var \Orno\Cache\Adapter\AdapterInterface
      */
     protected $adapter;
 
     /**
      * Constructor
      *
-     * @param \Orno\Cache\Adapter\CacheAdapterInterface $adapter
+     * @param \Orno\Cache\Adapter\AdapterInterface $adapter
      */
-    public function __construct(CacheAdapterInterface $adapter)
+    public function __construct(AdapterInterface $adapter)
     {
         $this->setAdapter($adapter);
     }
 
     /**
-     * Gets the value from the adapter
-     *
-     * @param string $key
-     * @return mixed
+     * {@inheritdoc}
      */
     public function get($key)
     {
@@ -45,13 +40,11 @@ class Cache
     }
 
     /**
+     * {@inheritdoc}
      *
-     * @param string $key
-     * @param mixed $data
-     * @param string|int $expiry
      * @return \Orno\Cache\Cache
      */
-    public function set($key, $data, $expiry)
+    public function set($key, $data, $expiry = null)
     {
         $this->getAdapter()->set($key, $data, $expiry);
 
@@ -59,9 +52,8 @@ class Cache
     }
 
     /**
-     * Deletes the value from the adapter
+     * {@inheritdoc}
      *
-     * @param string $key
      * @return \Orno\Cache\Cache
      */
     public function delete($key)
@@ -72,14 +64,73 @@ class Cache
     }
 
     /**
-     * Sets the adapter configuration
+     * {@inheritdoc}
      *
-     * @param array $config
+     * @return \Orno\Cache\Cache
+     */
+    public function persist($key, $value)
+    {
+        $this->getAdapter()->persist($key, $value);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return \Orno\Cache\Cache
+     */
+    public function increment($key, $offset = 1)
+    {
+        $this->getAdapter()->increment($key, $offset);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return \Orno\Cache\Cache
+     */
+    public function decrement($key, $offset = 1)
+    {
+        $this->getAdapter()->decrement($key, $offset);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return \Orno\Cache\Cache
+     */
+    public function flush()
+    {
+        $this->getAdapter()->flush();
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return \Orno\Cache\Cache
      */
     public function setConfig(array $config)
     {
         $this->getAdapter()->setConfig($config);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return \Orno\Cache\Cache
+     */
+    public function setDefaultExpiry($expiry)
+    {
+        $this->getAdapter()->setDefaultExpiry($expiry);
 
         return $this;
     }
@@ -97,12 +148,13 @@ class Cache
     /**
      * Sets the adapter
      *
-     * @param \Orno\Cache\Adapter\CacheAdapterInterface $adapter
+     * @param  \Orno\Cache\Adapter\AdapterInterface $adapter
      * @return \Orno\Cache\Cache
      */
-    public function setAdapter(CacheAdapterInterface $adapter)
+    public function setAdapter(AdapterInterface $adapter)
     {
         $this->adapter = $adapter;
+
         return $this;
     }
 }
