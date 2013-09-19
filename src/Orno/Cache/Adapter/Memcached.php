@@ -7,8 +7,6 @@
  */
 namespace Orno\Cache\Adapter;
 
-use Orno\Cache\Exception;
-
 /**
  * Memcached
  *
