@@ -17,13 +17,22 @@ use Orno\Cache\Exception\AdapaterNotAvailableException;
 class Apc extends AbstractAdapter
 {
     /**
+     * If this is set to true it will use the APCu extension else it will use the APC (if loaded)
+     *
+     * @var bool
+     */
+    protected $apcu = false;
+
+    /**
      * Constructor
      *
      * @throws AdapaterNotAvailableException
      */
     public function __construct()
     {
-        if (! extension_loaded('apc')) {
+        if (extension_loaded('apcu')) {
+            $this->apcu = true;
+        } elseif (! extension_loaded('apc')) {
             throw new AdapaterNotAvailableException('The APC extension is not loaded');
         }
     }
@@ -35,6 +44,10 @@ class Apc extends AbstractAdapter
      */
     public function get($key)
     {
+        if ($this->apcu) {
+            return apcu_fetch($key);
+        }
+
         return apc_fetch($key);
     }
 
@@ -53,7 +66,11 @@ class Apc extends AbstractAdapter
             $expiry = $this->convertExpiryString($expiry);
         }
 
-        apc_add($key, $data, $expiry);
+        if ($this->apcu) {
+            apcu_add($key, $data, $expiry);
+        } else {
+            apc_add($key, $data, $expiry);
+        }
 
         return $this;
     }
@@ -65,7 +82,11 @@ class Apc extends AbstractAdapter
      */
     public function delete($key)
     {
-        apc_delete($key);
+        if ($this->apcu) {
+            apcu_delete($key);
+        } else {
+            apc_delete($key);
+        }
 
         return $this;
     }
@@ -117,7 +138,11 @@ class Apc extends AbstractAdapter
      */
     public function flush()
     {
-        apc_clear_cache('user');
+        if ($this->apcu) {
+            apcu_clear_cache('user');
+        } else {
+            apc_clear_cache('user');
+        }
 
         return $this;
     }
