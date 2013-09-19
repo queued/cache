@@ -5,7 +5,7 @@
  * @author  Phil Bennett @philipobenito
  * @license MIT (see LICENSE file)
  */
-namespace Orno\Cache;
+namespace Orno\Cache\Adapter;
 
 use Orno\Cache\Exception\AdapaterNotAvailableException;
 
