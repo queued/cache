@@ -2,32 +2,19 @@
 
 namespace OrnoTest;
 
-use Orno\Cache\Adapter\Memcached;
+use Orno\Cache\Adapter\Apc;
 
-class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
+class ApcAdapterTest extends \PHPUnit_Framework_Testcase
 {
-    protected $config = [
-        'servers' => [
-            ['127.0.0.1', 11211, 1]
-        ],
-        'expiry' => 60
-    ];
-
     protected $adapter;
 
     public function setUp()
     {
-        if (! extension_loaded('memcached')) {
-            $this->markTestSkipped('The memcached extension is not loaded and therefore cannot be integration tested');
+        if (! extension_loaded('apc') && ! extension_loaded('apcu')) {
+            $this->markTestSkipped('The APC extension is not loaded and therefore cannot be integration tested');
         }
 
-        $mc = $this->getMock('Memcached', ['addServers', 'quit']);
-
-        $mc->expects($this->once())
-           ->method('addServers')
-           ->with($this->equalTo($this->config['servers']));
-
-        $this->adapter = new Memcached($mc, $this->config);
+        $this->adapter = new Apc;
     }
 
     public function tearDown()
@@ -43,7 +30,7 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
         $this->adapter->set($key, $value);
 
         $this->assertSame($value, $this->adapter->get($key));
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\Apc', $this->adapter->delete($key));
     }
 
     public function testDelete()
@@ -53,7 +40,7 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 
         $this->adapter->set($key, $value);
 
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\Apc', $this->adapter->delete($key));
         $this->assertFalse($this->adapter->get($key));
     }
 
@@ -67,7 +54,7 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
         $newValue = $this->adapter->get($key);
 
         $this->assertSame(110, $newValue);
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\Apc', $this->adapter->delete($key));
     }
 
     public function testDecrement()
@@ -80,12 +67,12 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
         $newValue = $this->adapter->get($key);
 
         $this->assertSame(140, $newValue);
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\Apc', $this->adapter->delete($key));
     }
 
     public function testSetConfig()
     {
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->adapter->setConfig([]));
+        $this->assertInstanceOf('Orno\Cache\Adapter\Apc', $this->adapter->setConfig([]));
     }
 
     public function randomString($length = 10)
