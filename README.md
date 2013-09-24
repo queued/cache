@@ -1,5 +1,7 @@
 # Orno\Cache
 
+[![Build Status](https://travis-ci.org/orno/cache.png?branch=master)](https://travis-ci.org/orno/cache) [![Latest Stable Version](https://poser.pugx.org/orno/cache/v/stable.png)](https://packagist.org/packages/orno/cache) [![Total Downloads](https://poser.pugx.org/orno/cache/downloads.png)](https://packagist.org/packages/orno/cache)
+
 ```php
 //Memcached
 $config = [
