@@ -30,11 +30,7 @@ class Apc extends AbstractAdapter
      */
     public function __construct()
     {
-        if (extension_loaded('apcu')) {
-            $this->apcu = true;
-        } elseif (! extension_loaded('apc')) {
-            throw new AdapaterNotAvailableException('The APC extension is not loaded');
-        }
+        $this->apcu = function_exists('apcu_fetch');
     }
 
     /**
