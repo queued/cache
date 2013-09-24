@@ -8,7 +8,7 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 {
     protected $config = [
         'servers' => [
-            ['127.0.0.1', 11211, 1]
+            ['localhost', 11211, 1]
         ],
         'expiry' => 60
     ];
