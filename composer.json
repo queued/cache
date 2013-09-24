@@ -1,0 +1,25 @@
+{
+    "name": "orno/cache",
+    "description": "",
+    "keywords": ["orno", "cache", "memcached", "redis", "apc"],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4"
+    },
+    "authors": [
+        {
+            "name": "Phil Bennett",
+            "email": "philipobenito@gmail.com"
+        },
+        {
+            "name": "Michael Bardsley",
+            "email": "me@mic-b.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Orno\\Cache": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
