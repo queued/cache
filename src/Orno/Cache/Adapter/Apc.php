@@ -106,9 +106,11 @@ class Apc extends AbstractAdapter
      */
     public function increment($key, $offset = 1)
     {
-        $value = (int) $this->get($key) + $offset;
-
-        $this->set($key, $value);
+        if ($this->apcu) {
+            apcu_inc($key, $offset);
+        } else {
+            apc_inc($key, $offset);
+        }
 
         return $this;
     }
@@ -120,9 +122,11 @@ class Apc extends AbstractAdapter
      */
     public function decrement($key, $offset = 1)
     {
-        $value = (int) $this->get($key) - $offset;
-
-        $this->set($key, $value);
+        if ($this->apcu) {
+            apcu_dec($key, $offset);
+        } else {
+            apc_dec($key, $offset);
+        }
 
         return $this;
     }
