@@ -2,7 +2,7 @@
 
 namespace OrnoTest;
 
-use Orno\Cache\Adapter\Memcached;
+use Orno\Cache\Adapter\Memcached as MemcachedAdapter;
 
 class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 {
@@ -21,13 +21,9 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
             $this->markTestSkipped('The memcached extension is not loaded and therefore cannot be integration tested');
         }
 
-        $mc = $this->getMock('Memcached', ['addServers', 'quit']);
+        $mc = new \Memcached;
 
-        $mc->expects($this->once())
-           ->method('addServers')
-           ->with($this->equalTo($this->config['servers']));
-
-        $this->adapter = new Memcached($mc, $this->config);
+        $this->adapter = new MemcachedAdapter($mc, $this->config);
     }
 
     public function tearDown()
