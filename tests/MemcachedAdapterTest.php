@@ -8,7 +8,7 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 {
     protected $config = [
         'servers' => [
-            ['localhost', 11211, 1]
+            ['127.0.0.1', 11211, 1]
         ],
         'expiry' => 60
     ];
@@ -33,8 +33,8 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 
     public function testGetAndSet()
     {
-        $key = microtime();
-        $value = $this->randomString();
+        $key = $this->randomString();
+        $value = $this->randomString(20);
 
         $this->adapter->set($key, $value);
 
@@ -44,8 +44,8 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 
     public function testDelete()
     {
-        $key = microtime();
-        $value = $this->randomString();
+        $key = $this->randomString();
+        $value = $this->randomString(20);
 
         $this->adapter->set($key, $value);
 
@@ -55,9 +55,10 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 
     public function testIncrement()
     {
-        $key = microtime();
+        $key = $this->randomString();
         $value = 100;
 
+        $this->adapter->set($key, $value);
         $this->adapter->increment($key, 10);
 
         $newValue = $this->adapter->get($key);
@@ -68,9 +69,10 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 
     public function testDecrement()
     {
-        $key = microtime();
+        $key = $this->randomString();
         $value = 150;
 
+        $this->adapter->set($key, $value);
         $this->adapter->decrement($key, 10);
 
         $newValue = $this->adapter->get($key);
@@ -86,7 +88,7 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 
     public function randomString($length = 10)
     {
-        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         $size = strlen( $chars );
 
         $str = '';
