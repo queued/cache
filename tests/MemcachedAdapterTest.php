@@ -2,7 +2,7 @@
 
 namespace OrnoTest;
 
-use Orno\Cache\Adapter\Memcached as MemcachedAdapter;
+use Orno\Cache\Adapter\MemcachedAdapter;
 
 class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 {
@@ -39,7 +39,7 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
         $this->adapter->set($key, $value);
 
         $this->assertSame($value, $this->adapter->get($key));
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\MemcachedAdapter', $this->adapter->delete($key));
     }
 
     public function testDelete()
@@ -49,7 +49,7 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
 
         $this->adapter->set($key, $value);
 
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\MemcachedAdapter', $this->adapter->delete($key));
         $this->assertFalse($this->adapter->get($key));
     }
 
@@ -64,7 +64,7 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
         $newValue = $this->adapter->get($key);
 
         $this->assertSame(110, $newValue);
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\MemcachedAdapter', $this->adapter->delete($key));
     }
 
     public function testDecrement()
@@ -78,12 +78,12 @@ class MemcachedAdapterTest extends \PHPUnit_Framework_Testcase
         $newValue = $this->adapter->get($key);
 
         $this->assertSame(140, $newValue);
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\MemcachedAdapter', $this->adapter->delete($key));
     }
 
     public function testSetConfig()
     {
-        $this->assertInstanceOf('Orno\Cache\Adapter\Memcached', $this->adapter->setConfig([]));
+        $this->assertInstanceOf('Orno\Cache\Adapter\MemcachedAdapter', $this->adapter->setConfig([]));
     }
 
     public function randomString($length = 10)
