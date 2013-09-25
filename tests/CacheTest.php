@@ -21,7 +21,7 @@ class CacheTest extends \PHPUnit_Framework_Testcase
 
     public function setup()
     {
-        $adapter = $this->getMockBuilder('Orno\Cache\Adapter\Memcached')
+        $adapter = $this->getMockBuilder('Orno\Cache\Adapter\MemcachedAdapter')
                         ->disableOriginalConstructor()
                         ->getMock();
 

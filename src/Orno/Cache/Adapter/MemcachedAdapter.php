@@ -8,11 +8,11 @@
 namespace Orno\Cache\Adapter;
 
 /**
- * Memcached
+ * MemcachedAdapter
  *
  * @author Michael Bardsley <me@mic-b.co.uk>
  */
-class Memcached extends AbstractAdapter
+class MemcachedAdapter extends AbstractAdapter
 {
     /**
      * @var \Memcached
