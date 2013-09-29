@@ -10,11 +10,11 @@ namespace Orno\Cache\Adapter;
 use Orno\Cache\Exception\AdapaterNotAvailableException;
 
 /**
- * Apc
+ * ApcAdapter
  *
  * @author Michael Bardsley <me@mic-b.co.uk>
  */
-class Apc extends AbstractAdapter
+class ApcAdapter extends AbstractAdapter
 {
     /**
      * If this is set to true it will use the APCu extension else it will use the APC (if loaded)

@@ -12,7 +12,7 @@ $config = [
     'expiry' => 120; //number of seconds until the cache expires
     'expiry' => '5w 9d 12h 24m 55s', //expiry in time string
 ];
-$memcached = new Orno\Cache\Adapter\Memcached($config);
+$memcached = new Orno\Cache\Adapter\MemcachedAdapter($config);
 $cache = new Orno\Cache\Cache($memcached);
 
 //a time string with a 5 hour expiry
@@ -24,7 +24,7 @@ echo $cache->get('key');
 $cache->delete('key');
 
 //Apc
-$apc = new Orno\Cache\Adapter\Apc();
+$apc = new Orno\Cache\Adapter\ApcAdapter();
 $cache = new Orno\Cache\Cache($apc);
 
 //a time string with a 5 hour expiry

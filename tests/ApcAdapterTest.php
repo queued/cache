@@ -2,7 +2,7 @@
 
 namespace OrnoTest;
 
-use Orno\Cache\Adapter\Apc;
+use Orno\Cache\Adapter\ApcAdapter;
 
 class ApcAdapterTest extends \PHPUnit_Framework_Testcase
 {
@@ -14,7 +14,7 @@ class ApcAdapterTest extends \PHPUnit_Framework_Testcase
             $this->markTestSkipped('The APC extension is not loaded and therefore cannot be integration tested');
         }
 
-        $this->adapter = new Apc;
+        $this->adapter = new ApcAdapter;
     }
 
     public function tearDown()
@@ -30,7 +30,7 @@ class ApcAdapterTest extends \PHPUnit_Framework_Testcase
         $this->adapter->set($key, $value, 2000);
 
         $this->assertSame($value, $this->adapter->get($key));
-        $this->assertInstanceOf('Orno\Cache\Adapter\Apc', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\ApcAdapter', $this->adapter->delete($key));
     }
 
     public function testDelete()
@@ -40,7 +40,7 @@ class ApcAdapterTest extends \PHPUnit_Framework_Testcase
 
         $this->adapter->set($key, $value);
 
-        $this->assertInstanceOf('Orno\Cache\Adapter\Apc', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\ApcAdapter', $this->adapter->delete($key));
         $this->assertFalse($this->adapter->get($key));
     }
 
@@ -55,7 +55,7 @@ class ApcAdapterTest extends \PHPUnit_Framework_Testcase
         $newValue = $this->adapter->get($key);
 
         $this->assertSame(110, $newValue);
-        $this->assertInstanceOf('Orno\Cache\Adapter\Apc', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\ApcAdapter', $this->adapter->delete($key));
     }
 
     public function testDecrement()
@@ -69,12 +69,12 @@ class ApcAdapterTest extends \PHPUnit_Framework_Testcase
         $newValue = $this->adapter->get($key);
 
         $this->assertSame(140, $newValue);
-        $this->assertInstanceOf('Orno\Cache\Adapter\Apc', $this->adapter->delete($key));
+        $this->assertInstanceOf('Orno\Cache\Adapter\ApcAdapter', $this->adapter->delete($key));
     }
 
     public function testSetConfig()
     {
-        $this->assertInstanceOf('Orno\Cache\Adapter\Apc', $this->adapter->setConfig([]));
+        $this->assertInstanceOf('Orno\Cache\Adapter\ApcAdapter', $this->adapter->setConfig([]));
     }
 
     public function randomString($length = 10)
