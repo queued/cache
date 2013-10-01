@@ -20,7 +20,7 @@ class RedisAdapterTest extends \PHPUnit_Framework_Testcase
         try {
             $client = new \Predis\Client;
             $this->adapter = new RedisAdapter($client, $this->config);
-        } catch (\Exception $e) {
+        } catch (\Predis\Connection\ConnectionException $e) {
             $this->markTestSkipped('The redis extension is not loaded and therefore cannot be integration tested');
         }
     }
@@ -32,57 +32,77 @@ class RedisAdapterTest extends \PHPUnit_Framework_Testcase
 
     public function testGetAndSet()
     {
-        $key = $this->randomString();
-        $value = $this->randomString(20);
+        try {
+            $key = $this->randomString();
+            $value = $this->randomString(20);
 
-        $this->adapter->set($key, $value);
+            $this->adapter->set($key, $value);
 
-        $this->assertSame($value, $this->adapter->get($key));
-        $this->assertInstanceOf('Orno\Cache\Adapter\RedisAdapter', $this->adapter->delete($key));
+            $this->assertSame($value, $this->adapter->get($key));
+            $this->assertInstanceOf('Orno\Cache\Adapter\RedisAdapter', $this->adapter->delete($key));
+        } catch (\Predis\Connection\ConnectionException $e) {
+            $this->markTestSkipped('The redis extension is not loaded and therefore cannot be integration tested');
+        }
     }
 
     public function testDelete()
     {
-        $key = $this->randomString();
-        $value = $this->randomString(20);
+        try {
+            $key = $this->randomString();
+            $value = $this->randomString(20);
 
-        $this->adapter->set($key, $value);
+            $this->adapter->set($key, $value);
 
-        $this->assertInstanceOf('Orno\Cache\Adapter\RedisAdapter', $this->adapter->delete($key));
-        $this->assertFalse($this->adapter->get($key));
+            $this->assertInstanceOf('Orno\Cache\Adapter\RedisAdapter', $this->adapter->delete($key));
+            $this->assertFalse($this->adapter->get($key));
+        } catch (\Predis\Connection\ConnectionException $e) {
+            $this->markTestSkipped('The redis extension is not loaded and therefore cannot be integration tested');
+        }
     }
 
     public function testIncrement()
     {
-        $key = $this->randomString();
-        $value = 100;
+        try {
+            $key = $this->randomString();
+            $value = 100;
 
-        $this->adapter->set($key, $value);
-        $this->adapter->increment($key, 10);
+            $this->adapter->set($key, $value);
+            $this->adapter->increment($key, 10);
 
-        $newValue = $this->adapter->get($key);
+            $newValue = $this->adapter->get($key);
 
-        $this->assertEquals(110, $newValue);
-        $this->assertInstanceOf('Orno\Cache\Adapter\RedisAdapter', $this->adapter->delete($key));
+            $this->assertEquals(110, $newValue);
+            $this->assertInstanceOf('Orno\Cache\Adapter\RedisAdapter', $this->adapter->delete($key));
+        } catch (\Predis\Connection\ConnectionException $e) {
+            $this->markTestSkipped('The redis extension is not loaded and therefore cannot be integration tested');
+        }
     }
 
     public function testDecrement()
     {
-        $key = $this->randomString();
-        $value = 150;
+        try {
+            $key = $this->randomString();
+            $value = 150;
 
-        $this->adapter->set($key, $value);
-        $this->adapter->decrement($key, 10);
+            $this->adapter->set($key, $value);
+            $this->adapter->decrement($key, 10);
 
-        $newValue = $this->adapter->get($key);
+            $newValue = $this->adapter->get($key);
 
-        $this->assertEquals(140, $newValue);
-        $this->assertInstanceOf('Orno\Cache\Adapter\RedisAdapter', $this->adapter->delete($key));
+            $this->assertEquals(140, $newValue);
+            $this->assertInstanceOf('Orno\Cache\Adapter\RedisAdapter', $this->adapter->delete($key));
+        } catch (\Predis\Connection\ConnectionException $e) {
+            $this->markTestSkipped('The redis extension is not loaded and therefore cannot be integration tested');
+        }
     }
 
     public function testSetConfig()
     {
-        $this->assertInstanceOf('Orno\Cache\Adapter\RedisAdapter', $this->adapter->setConfig([]));
+        try {
+            $this->assertInstanceOf('Orno\Cache\Adapter\RedisAdapter', $this->adapter->setConfig([]));
+        } catch (\Predis\Connection\ConnectionException $e) {
+            $this->markTestSkipped('The redis extension is not loaded and therefore cannot be integration tested');
+        }
     }
 
     public function randomString($length = 10)
