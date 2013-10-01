@@ -6,6 +6,7 @@ php:
 
 services:
     - memcached
+    - redis-server
 
 before_script:
     - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
