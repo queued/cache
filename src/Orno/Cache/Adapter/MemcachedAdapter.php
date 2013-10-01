@@ -24,11 +24,10 @@ class MemcachedAdapter extends AbstractAdapter
      *
      * @param  \Memcached $memcached
      * @param  array      $config
-     * @throws \Orno\Cache\Exception\AdapaterNotAvailableException
      */
     public function __construct(\Memcached $memcached, array $config)
     {
-        $this->setMemcached($memcached);
+        $this->memcached = $memcached;
         $this->setConfig($config);
     }
 
@@ -42,8 +41,6 @@ class MemcachedAdapter extends AbstractAdapter
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
     public function get($key)
     {
@@ -53,7 +50,7 @@ class MemcachedAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      *
-     * @return \Orno\Cache\Adapter\Memcached
+     * @return \Orno\Cache\Adapter\MemcachedAdapter
      */
     public function set($key, $data, $expiry = null)
     {
@@ -73,7 +70,7 @@ class MemcachedAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      *
-     * @return \Orno\Cache\Adapter\Memcached
+     * @return \Orno\Cache\Adapter\MemcachedAdapter
      */
     public function delete($key)
     {
@@ -85,7 +82,7 @@ class MemcachedAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      *
-     * @return \Orno\Cache\Adapter\Memcached
+     * @return \Orno\Cache\Adapter\MemcachedAdapter
      */
     public function persist($key, $value)
     {
@@ -97,7 +94,7 @@ class MemcachedAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      *
-     * @return \Orno\Cache\Adapter\Memcached
+     * @return \Orno\Cache\Adapter\MemcachedAdapter
      */
     public function increment($key, $offset = 1)
     {
@@ -109,7 +106,7 @@ class MemcachedAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      *
-     * @return \Orno\Cache\Adapter\Memcached
+     * @return \Orno\Cache\Adapter\MemcachedAdapter
      */
     public function decrement($key, $offset = 1)
     {
@@ -121,7 +118,7 @@ class MemcachedAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      *
-     * @return \Orno\Cache\Adapter\Memcached
+     * @return \Orno\Cache\Adapter\MemcachedAdapter
      */
     public function flush()
     {
@@ -133,7 +130,7 @@ class MemcachedAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      *
-     * @return \Orno\Cache\Adapter\Memcached
+     * @return \Orno\Cache\Adapter\MemcachedAdapter
      */
     public function setConfig(array $config)
     {
@@ -154,7 +151,7 @@ class MemcachedAdapter extends AbstractAdapter
      * @param  string $host
      * @param  int    $port
      * @param  int    $weight
-     * @return \Orno\Cache\Adapter\Memcached
+     * @return \Orno\Cache\Adapter\MemcachedAdapter
      */
     protected function addServer($host, $port, $weight)
     {
@@ -167,33 +164,12 @@ class MemcachedAdapter extends AbstractAdapter
      * Adds an array of servers to the memcached configuration
      *
      * @param  array $servers
-     * @return \Orno\Cache\Adapter\Memcached
+     * @return \Orno\Cache\Adapter\MemcachedAdapter
      */
     protected function addServers(array $servers)
     {
         $this->memcached->addServers($servers);
 
         return $this;
-    }
-
-    /**
-     * Gets the instantiated memcached object
-     *
-     * @return \Memcached
-     */
-    protected function getMemcached()
-    {
-        return $this->memcached;
-    }
-
-    /**
-     * Sets the memcached object
-     *
-     * @param  \Memcached $memcached
-     * @return void
-     */
-    protected function setMemcached(\Memcached $memcached)
-    {
-        $this->memcached = $memcached;
     }
 }

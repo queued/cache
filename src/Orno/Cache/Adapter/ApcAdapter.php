@@ -7,8 +7,6 @@
  */
 namespace Orno\Cache\Adapter;
 
-use Orno\Cache\Exception\AdapaterNotAvailableException;
-
 /**
  * ApcAdapter
  *
@@ -25,8 +23,6 @@ class ApcAdapter extends AbstractAdapter
 
     /**
      * Constructor
-     *
-     * @throws AdapaterNotAvailableException
      */
     public function __construct()
     {
