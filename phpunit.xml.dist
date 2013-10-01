@@ -23,4 +23,10 @@
         </whitelist>
     </filter>
 
+    <logging>
+        <log type="coverage-text" target="php://stdout" title="Api" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="90"/>
+        <log type="coverage-html" target="coverage/html" title="Api" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="90"/>
+        <log type="coverage-clover" target="coverage/clover/report.xml" title="Api" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="90"/>
+    </logging>
+
 </phpunit>
