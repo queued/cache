@@ -35,3 +35,7 @@ $cache->set('key', 'value', 18000);
 echo $cache->get('key');
 $cache->delete('key');
 ```
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/orno/cache/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
