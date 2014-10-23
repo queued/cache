@@ -1,6 +1,6 @@
 {
     "name": "orno/cache",
-    "description": "",
+    "description": "Caching component with multiple adapters",
     "keywords": ["orno", "cache", "memcached", "redis", "apc"],
     "license": "MIT",
     "require": {
